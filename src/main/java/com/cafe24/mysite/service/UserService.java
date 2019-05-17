@@ -25,6 +25,9 @@ public class UserService {
 	}
 	
 	public boolean update(UserVo userVo, UserVo oldUserVo) {
+
+		oldUserVo = userDao.get(oldUserVo.getNo());
+		
 		oldUserVo.setName(userVo.getName());
 		oldUserVo.setGender(userVo.getGender());
 		if(userVo.getPassword() != null && !"".equals(userVo.getPassword()))

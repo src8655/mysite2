@@ -18,8 +18,8 @@
 
 	<!-- 빈설정을 annotation으로 하겠다 @Controller에 대한 auto scan -->
 	<context:annotation-config />
-	<context:component-scan
-		base-package="com.cafe24.mysite.controller" />
+	<context:component-scan base-package="com.cafe24.mysite.controller" />
+	<context:component-scan base-package="com.cafe24.mysite.exception" />
 
 	<!-- view resolver 설정 -->
 	<bean id="viewResolver"
@@ -29,6 +29,9 @@
 		<property name="prefix" value="/WEB-INF/views/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
+	
+
+		
 
 
 </beans>
