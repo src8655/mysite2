@@ -44,7 +44,6 @@ public class UserDao {
 		boolean result = false;
 		
 		int count = sqlSession.insert("userInsert", vo);
-		System.out.println(count);
 		
 		if(count == 1) result = true;
 		
