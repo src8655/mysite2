@@ -33,7 +33,8 @@
 						</tr>
 					</table>
 					<div class="bottom">
-						<a href="${pageContext.servletContext.contextPath}/board/list">취소</a>
+						<c:if test="${no eq -1}"><a href="${pageContext.servletContext.contextPath}/board/list">취소</a></c:if>
+						<c:if test="${no ne -1}"><a href="${pageContext.servletContext.contextPath}/board/view?no=${no}">취소</a></c:if>
 						<input type="submit" value="등록">
 					</div>
 				</form>				

@@ -38,19 +38,25 @@ public class BoardController {
 	
 	@RequestMapping(value="/write", method = RequestMethod.GET)
 	public String write(
+			@RequestParam(value="no", required = true, defaultValue = "-1") int no,
 			@RequestParam(value="groupNo", required = true, defaultValue = "-1") int groupNo,
 			@RequestParam(value="orderNo", required = true, defaultValue = "-1") int orderNo,
 			@RequestParam(value="depth", required = true, defaultValue = "-1") int depth,
 			Model model,
 			HttpSession session
 			) {
-		if(session == null) return "redirect:/board/list";
+		if(session == null) 
+			if(no == -1) return "redirect:/board/list";
+			else return "redirect:/board/view?no="+no;
 		UserVo authUser = (UserVo)session.getAttribute("authUser");
-		if(authUser == null) return "redirect:/board/list";
+		if(authUser == null) 
+			if(no == -1) return "redirect:/board/list";
+			else return "redirect:/board/view?no="+no;
 
 		model.addAttribute("groupNo", groupNo);
 		model.addAttribute("orderNo", orderNo);
 		model.addAttribute("depth", depth);
+		model.addAttribute("no", no);
 		
 		return "board/write";
 	}

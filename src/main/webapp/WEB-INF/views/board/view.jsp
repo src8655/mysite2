@@ -41,7 +41,7 @@
 				<div class="bottom">
 					<a href="${pageContext.servletContext.contextPath}/board/list">글목록</a>
 					<a href="${pageContext.servletContext.contextPath}/board/modify?no=${boardVo.no}">글수정</a>
-					<a href="${pageContext.servletContext.contextPath}/board/write?groupNo=${boardVo.groupNo}&orderNo=${boardVo.orderNo}&depth=${boardVo.depth}">답글</a>
+					<a href="${pageContext.servletContext.contextPath}/board/write?no=${boardVo.no}&groupNo=${boardVo.groupNo}&orderNo=${boardVo.orderNo}&depth=${boardVo.depth}">답글</a>
 				</div>
 			</div>
 		</div>
