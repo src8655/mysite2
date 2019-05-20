@@ -13,7 +13,7 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"></c:import>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="${pageContext.servletContext.contextPath}/board/list" method="get">
+				<form id="search_form" action="" method="get">
 					<input type="text" id="kwd" name="kwd" value="${kwd_decode}">
 					<input type="submit" value="찾기">
 				</form>
@@ -29,17 +29,41 @@
 					<c:forEach items="${list}" var="data">
 					<tr>
 						<td>${cnt}</td>
-						<td><a href="${pageContext.servletContext.contextPath}/board/view?no=${data.no}&kwd=${kwd_encode}">${data.subject}</a></td>
+						<td style="text-align:left;padding-left:${20*data.depth}px;">
+							<c:if test="${data.depth ne 0}">
+								<img src="${pageContext.servletContext.contextPath}/assets/images/reply.png" alt="답글" />
+							</c:if>
+							<a href="${pageContext.servletContext.contextPath}/board/view?no=${data.no}">${data.title}</a>
+						</td>
 						<td>${data.userName}</td>
 						<td>${data.hit}</td>
-						<td>${data.writeDate}</td>
-						<td><a href="${pageContext.servletContext.contextPath}/board/delete?no=${data.no}&kwd=${kwd_encode}">삭제</a></td>
+						<td>${data.regDate}</td>
+						<td><a href="${pageContext.servletContext.contextPath}/board/delete?no=${data.no}" class="del">삭제</a></td>
 					</tr>
 					<c:set var="cnt" scope="page" value="${cnt-1}"></c:set>
 					</c:forEach>
+
 				</table>
+				
+				
+				<!-- pager 추가 -->
+				<div class="pager">
+					<ul>
+						<li><a href="">◀</a></li>
+						<li><a href="">1</a></li>
+						<li class="selected">2</li>
+						<li><a href="">3</a></li>
+						<li>4</li>
+						<li>5</li>
+						<li><a href="">▶</a></li>
+					</ul>
+				</div>					
+				<!-- pager 추가 -->
+				
+				
+				
 				<div class="bottom">
-					<a href="${pageContext.servletContext.contextPath}/board/write?kwd=${kwd_encode}" id="new-book">글쓰기</a>
+					<a href="${pageContext.servletContext.contextPath}/board/write" id="new-book">글쓰기</a>
 				</div>				
 			</div>
 		</div>

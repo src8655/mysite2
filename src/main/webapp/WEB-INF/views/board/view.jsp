@@ -19,13 +19,13 @@
 					</tr>
 					<tr>
 						<td class="label">제목</td>
-						<td colspan="5">${boardVo.subject}</td>
+						<td colspan="5">${boardVo.title}</td>
 					</tr>
 					<tr>
 						<td class="label">작성자</td>
 						<td>${boardVo.userName}</td>
 						<td class="label">작성일</td>
-						<td>${boardVo.writeDate}</td>
+						<td>${boardVo.regDate}</td>
 						<td class="label">조회수</td>
 						<td>${boardVo.hit}</td>
 					</tr>
@@ -39,8 +39,9 @@
 					</tr>
 				</table>
 				<div class="bottom">
-					<a href="${pageContext.servletContext.contextPath}/board/list?kwd=${kwd_encode}">글목록</a>
-					<a href="${pageContext.servletContext.contextPath}/board/modify?no=${boardVo.no}&kwd=${kwd_encode}">글수정</a>
+					<a href="${pageContext.servletContext.contextPath}/board/list">글목록</a>
+					<a href="${pageContext.servletContext.contextPath}/board/modify?no=${boardVo.no}">글수정</a>
+					<a href="${pageContext.servletContext.contextPath}/board/write?groupNo=${boardVo.groupNo}&orderNo=${boardVo.orderNo}&depth=${boardVo.depth}">답글</a>
 				</div>
 			</div>
 		</div>

@@ -15,10 +15,18 @@ public class UserDao {
 	@Autowired
 	private SqlSession sqlSession;
 	
+	public UserVo get(String email) {
+		UserVo result = null;
+		
+		result = (UserVo)sqlSession.selectOne("user.getByEmail", email);
+		
+		return result;
+	}
+	
 	public boolean update(UserVo vo) {
 		boolean result = false;
 		
-		int count = sqlSession.update("userUpdate", vo);
+		int count = sqlSession.update("user.update", vo);
 		if(count == 1) result = true;
 		
 		return result;
@@ -29,21 +37,21 @@ public class UserDao {
 		Map<String, Long> map = new HashMap<String, Long>();
 		map.put("no", no);
 		
-		result = sqlSession.selectOne("userGetByNo", map);
+		result = sqlSession.selectOne("user.getByNo", map);
 		
 		return result;
 	}
 	public UserVo get(UserVo userVo) {
 		UserVo result = null;
 		
-		result = (UserVo)sqlSession.selectOne("userGetByEmailAndPassword", userVo);
+		result = (UserVo)sqlSession.selectOne("user.getByEmailAndPassword", userVo);
 		
 		return result;
 	}
 	public boolean insert(UserVo vo) {
 		boolean result = false;
 		
-		int count = sqlSession.insert("userInsert", vo);
+		int count = sqlSession.insert("user.insert", vo);
 		
 		if(count == 1) result = true;
 		

@@ -18,14 +18,14 @@ public class GuestbookDao {
 	public List<GuestbookVo> getList() {
 		List<GuestbookVo> result = new ArrayList<GuestbookVo>();
 		
-		result = sqlSession.selectList("guestbookGetlist");
+		result = sqlSession.selectList("guestbook.getlist");
 		
 		return result;
 	}
 	public boolean insert(GuestbookVo vo) {
 		boolean result = false;
 
-		int count = sqlSession.insert("guestbookInsert", vo);
+		int count = sqlSession.insert("guestbook.insert", vo);
 		if(count == 1) result = true;
 		
 		return result;
@@ -34,7 +34,7 @@ public class GuestbookDao {
 	public boolean delete(GuestbookVo vo) {
 		boolean result = false;
 		
-		int count = sqlSession.delete("guestbookDelete", vo);
+		int count = sqlSession.delete("guestbook.delete", vo);
 		if(count == 1) result = true;
 		
 		return result;

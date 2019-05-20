@@ -2,11 +2,15 @@ package com.cafe24.mysite.vo;
 
 public class BoardVo {
 	private Long no;
-	private String subject;
+	private String title;
 	private String contents;
-	private Long hit;
-	private String writeDate;
+	private int hit;
+	private String regDate;
+	private int groupNo;
+	private int orderNo;
+	private int depth;
 	private Long userNo;
+	
 	private String userName;
 	public Long getNo() {
 		return no;
@@ -14,11 +18,11 @@ public class BoardVo {
 	public void setNo(Long no) {
 		this.no = no;
 	}
-	public String getSubject() {
-		return subject;
+	public String getTitle() {
+		return title;
 	}
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	public String getContents() {
 		return contents;
@@ -26,17 +30,35 @@ public class BoardVo {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	public Long getHit() {
+	public int getHit() {
 		return hit;
 	}
-	public void setHit(Long hit) {
+	public void setHit(int hit) {
 		this.hit = hit;
 	}
-	public String getWriteDate() {
-		return writeDate;
+	public String getRegDate() {
+		return regDate;
 	}
-	public void setWriteDate(String writeDate) {
-		this.writeDate = writeDate;
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+	public int getGroupNo() {
+		return groupNo;
+	}
+	public void setGroupNo(int groupNo) {
+		this.groupNo = groupNo;
+	}
+	public int getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(int orderNo) {
+		this.orderNo = orderNo;
+	}
+	public int getDepth() {
+		return depth;
+	}
+	public void setDepth(int depth) {
+		this.depth = depth;
 	}
 	public Long getUserNo() {
 		return userNo;
@@ -44,17 +66,11 @@ public class BoardVo {
 	public void setUserNo(Long userNo) {
 		this.userNo = userNo;
 	}
-	
 	public String getUserName() {
 		return userName;
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
-	}
-	@Override
-	public String toString() {
-		return "BoardVo [no=" + no + ", subject=" + subject + ", contents=" + contents + ", hit=" + hit + ", writeDate="
-				+ writeDate + ", userNo=" + userNo + ", userName=" + userName + "]";
 	}
 	
 	

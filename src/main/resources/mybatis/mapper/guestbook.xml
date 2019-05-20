@@ -3,7 +3,7 @@
 
 <mapper namespace="guestbook">
 
-	<select id="guestbookGetlist" resultType="guestbookvo">
+	<select id="getlist" resultType="guestbookvo">
 	<![CDATA[
 		select no, name, contents, date_format(reg_date, '%Y-%m-%d %h:%i:%s') as regdate
 		from guestbook
@@ -11,13 +11,13 @@
 	]]>
 	</select>
 	
-	<insert id="guestbookInsert" parameterType="guestbookvo">
+	<insert id="insert" parameterType="guestbookvo">
 	<![CDATA[
 		insert into guestbook values(null, #{name}, #{password}, #{contents}, now())
 	]]>
 	</insert>
 	
-	<delete id="guestbookDelete" parameterType="guestbookvo">
+	<delete id="delete" parameterType="guestbookvo">
 	<![CDATA[
 		delete from guestbook where no=#{no} and password=#{password}
 	]]>

@@ -3,44 +3,40 @@
 
 <mapper namespace="board">
 
-	<delete id="boardDelete" parameterType="Long">
-	<![CDATA[
-		delete from board where no=#{no}
-	]]>
-	</delete>
-	
-	<update id="boardUpdate" parameterType="boardvo">
-	<![CDATA[
-		update board set
-		subject=#{subject},
-		contents=#{contents}
-		where no=#{no}
-	]]>
+	<update id="insert" parameterType="boardvo">
+
+		<if test="groupNo != -1">
+			update board set order_no=order_no+1 where order_no >= #{orderNo};
+		</if>
+		insert into board values(
+		null,
+		#{title},
+		#{contents},
+		#{hit},
+		now(),
+		<if test="groupNo == -1">
+			(select ifnull(max(group_no), 0)+1 from board a),
+		</if>
+		<if test="groupNo != -1">
+			#{groupNo},
+		</if>
+		#{orderNo},
+		#{depth},
+		#{userNo});
+		
 	</update>
 	
-	<select id="boardSelectOne" parameterType="Long" resultType="boardvo">
-	<![CDATA[
-		select a.no, a.subject, a.hit, date_format(a.write_date, '%Y-%m-%d') as writedate, b.name as username, a.contents, b.no as userno
+	<select id="getList" resultType="boardvo">
+		select a.no, title,contents,hit,DATE_FORMAT(reg_date,'%Y-%m-%d %H:%m:%s') as regDate,group_no as groupNo,order_no as orderNo,depth,user_no as userNo, b.name as userName
+		from board a, user b
+		where a.user_no=b.no
+		order by group_no desc, order_no asc
+	</select>
+	
+	<select id="getByNo" parameterType="long" resultType="boardvo">
+		select a.no, title,contents,hit,DATE_FORMAT(reg_date,'%Y-%m-%d %H:%m:%s') as regDate,group_no as groupNo,order_no as orderNo,depth,user_no as userNo, b.name as userName
 		from board a, user b
 		where a.user_no=b.no
 		and a.no=#{no}
-		order by a.no desc
-	]]>
-	</select>
-	
-	<select id="boardGetList" parameterType="String" resultType="boardvo">
-	<![CDATA[
-		select a.no, a.subject, a.hit, date_format(a.write_date, '%Y-%m-%d') as writedate, b.name as username
-		from board a, user b
-		where a.user_no=b.no
-		and subject like CONCAT('%', #{kwd}, '%')
-		order by no desc
-	]]>
-	</select>
-	
-	<select id="boardInsert" parameterType="boardvo">
-	<![CDATA[
-		insert into board values(null, #{subject}, #{contents}, #{hit}, now(), #{userNo})
-	]]>
 	</select>
 </mapper>

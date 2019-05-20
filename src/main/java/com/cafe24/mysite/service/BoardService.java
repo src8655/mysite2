@@ -11,42 +11,32 @@ import com.cafe24.mysite.vo.UserVo;
 
 @Service
 public class BoardService {
-	
+
 	@Autowired
 	BoardDao boardDao;
 	
-	public List<BoardVo> getList(String kwd) {
-		return boardDao.getList(kwd);
-	}
-	
-	public boolean insert(BoardVo boardVo) {
-		boardVo.setHit(0L);
+	public boolean boardWrite(BoardVo boardVo, UserVo authUser) {
+		boardVo.setUserNo(authUser.getNo());
+		boardVo.setHit(0);
+		
+		//첫글이면
+		if(boardVo.getGroupNo() == -1) {
+			boardVo.setOrderNo(1);
+			boardVo.setDepth(0);
+		}else {
+			//답글이면
+			boardVo.setOrderNo(boardVo.getOrderNo()+1);
+			boardVo.setDepth(boardVo.getDepth()+1);
+		}
+		
 		return boardDao.insert(boardVo);
 	}
 	
-	public boolean delete(Long no, UserVo authUser) {
-		BoardVo boardVo = boardDao.selectOne(no);
-		
-		//내 글만 수정
-		if(authUser.getNo() != boardVo.getUserNo())
-			return false;
-		
-		return boardDao.delete(no);
+	public List<BoardVo> getList() {
+		return boardDao.getList();
 	}
 	
-	public BoardVo selectOne(Long no) {
-		return boardDao.selectOne(no);
-	}
-
-	public boolean update(BoardVo boardVo, UserVo userVo) {
-		BoardVo oldBoardVo = boardDao.selectOne(boardVo.getNo());
-		
-		if(userVo.getNo() != oldBoardVo.getUserNo())
-			return false;
-		
-		oldBoardVo.setSubject(boardVo.getSubject());
-		oldBoardVo.setContents(boardVo.getContents());
-		
-		return boardDao.update(oldBoardVo);
+	public BoardVo getOne(Long no) {
+		return boardDao.getByNo(no);
 	}
 }
