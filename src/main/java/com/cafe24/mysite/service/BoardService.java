@@ -39,4 +39,8 @@ public class BoardService {
 	public BoardVo getOne(Long no) {
 		return boardDao.getByNo(no);
 	}
+	
+	public boolean modify(BoardVo boardVo) {
+		return boardDao.update(boardVo);
+	}
 }

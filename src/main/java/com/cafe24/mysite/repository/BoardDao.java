@@ -26,4 +26,9 @@ public class BoardDao {
 	public BoardVo getByNo(Long no) {
 		return (BoardVo)sqlSession.selectOne("board.getByNo", no);
 	}
+	
+	public boolean update(BoardVo boardVo) {
+		int result = sqlSession.update("board.update", boardVo);
+		return result == 1;
+	}
 }

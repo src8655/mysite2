@@ -39,4 +39,11 @@
 		where a.user_no=b.no
 		and a.no=#{no}
 	</select>
+	
+	<update id="update" parameterType="boardvo">
+		update board set
+		title=#{title},
+		contents=#{contents}
+		where no=#{no}
+	</update>
 </mapper>

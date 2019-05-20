@@ -80,6 +80,40 @@ public class BoardController {
 		
 		return "board/view";
 	}
-	
+
+	@RequestMapping(value="/modify", method = RequestMethod.GET)
+	public String modify(
+			@RequestParam(value="no", required = true, defaultValue = "-1") Long no,
+			Model model,
+			HttpSession session
+			) {
+		if(session == null) return "redirect:/board/view?no="+no;
+		UserVo authUser = (UserVo)session.getAttribute("authUser");
+		if(authUser == null) return "redirect:/board/view?no="+no;
+		
+		BoardVo boardVo = boardService.getOne(no);
+		if(authUser.getNo() != boardVo.getUserNo()) return "redirect:/board/view?no="+no;
+		
+		model.addAttribute("boardVo", boardVo);
+		
+		return "board/modify";
+	}
+	@RequestMapping(value="/modify", method = RequestMethod.POST)
+	public String modify(
+			@ModelAttribute BoardVo boardVo,
+			HttpSession session
+			) {
+		if(session == null) return "redirect:/board/view?no="+boardVo.getNo();
+		UserVo authUser = (UserVo)session.getAttribute("authUser");
+		if(authUser == null) return "redirect:/board/view?no="+boardVo.getNo();
+		
+		BoardVo boardVoOld = boardService.getOne(boardVo.getNo());
+		if(authUser.getNo() != boardVoOld.getUserNo()) return "redirect:/board/view?no="+boardVoOld.getNo();
+		
+		boardService.modify(boardVo);
+		
+		
+		return "redirect:/board/view?no="+boardVo.getNo();
+	}
 
 }
