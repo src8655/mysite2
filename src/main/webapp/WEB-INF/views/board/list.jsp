@@ -13,9 +13,9 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"></c:import>
 		<div id="content">
 			<div id="board">
-				<form id="search_form" action="" method="get">
-					<input type="text" id="kwd" name="kwd" value="${kwd_decode}">
-					<input type="submit" value="찾기">
+				<form id="search_form" action="${pageContext.servletContext.contextPath}/board/list" method="get">
+					<input type="text" id="kwd" name="kwd" value="${kwd_decode}" />
+					<input type="submit" value="찾기" />
 				</form>
 				<table class="tbl-ex">
 					<tr>
@@ -28,19 +28,25 @@
 					</tr>				
 					<c:forEach items="${list}" var="data">
 					<tr>
-						<td>${cnt}</td>
+						<td>${pagingMap.count - pagingMap.startNum - cnt}</td>
 						<td style="text-align:left;padding-left:${20*data.depth}px;">
 							<c:if test="${data.depth ne 0}">
 								<img src="${pageContext.servletContext.contextPath}/assets/images/reply.png" alt="답글" />
 							</c:if>
-							<a href="${pageContext.servletContext.contextPath}/board/view?no=${data.no}">${data.title}</a>
+							<a href="${pageContext.servletContext.contextPath}/board/view?no=${data.no}&pages=${pages}">${data.title}</a>
 						</td>
 						<td>${data.userName}</td>
 						<td>${data.hit}</td>
 						<td>${data.regDate}</td>
-						<td><a href="${pageContext.servletContext.contextPath}/board/delete?no=${data.no}" class="del">삭제</a></td>
+						<td>
+							<c:if test="${authUser ne null}">
+							<c:if test="${authUser.no eq data.userNo}">
+								<a href="${pageContext.servletContext.contextPath}/board/delete?no=${data.no}&pages=${pages}" class="del">삭제</a>
+							</c:if>
+							</c:if>
+						</td>
 					</tr>
-					<c:set var="cnt" scope="page" value="${cnt-1}"></c:set>
+					<c:set var="cnt" scope="page" value="${cnt+1}"></c:set>
 					</c:forEach>
 
 				</table>
@@ -49,13 +55,37 @@
 				<!-- pager 추가 -->
 				<div class="pager">
 					<ul>
-						<li><a href="">◀</a></li>
-						<li><a href="">1</a></li>
-						<li class="selected">2</li>
-						<li><a href="">3</a></li>
-						<li>4</li>
-						<li>5</li>
-						<li><a href="">▶</a></li>
+						<!-- 1보다 작으면 버튼 비활성화 -->
+						<c:if test="${(pagingMap.rangeStart - 1) lt 1}">
+							<li>◀</li>
+						</c:if>
+						<!-- 1보다 같거나 크면 버튼 활성화-->
+						<c:if test="${(pagingMap.rangeStart - 1) ge 1}">
+							<li><a href="${pageContext.servletContext.contextPath}/board/list?pages=${pagingMap.rangeStart - 1}">◀</a></li>
+						</c:if>
+						<c:forEach begin="${pagingMap.rangeStart}" end="${pagingMap.rangeStart + pagingMap.pageCnt - 1}" var="i">
+							<!-- 최대 페이지를 넘어가면 비활성화 -->
+							<c:if test="${i gt pagingMap.lastPage}">
+								<li>${i}</li>
+							</c:if>
+							<c:if test="${i le pagingMap.lastPage}">
+								<c:if test="${i eq pages}">
+									<li class="selected">${i}</li>
+								</c:if>
+								<c:if test="${i ne pages}">
+									<li><a href="${pageContext.servletContext.contextPath}/board/list?pages=${i}">${i}</a></li>
+								</c:if>
+							</c:if>
+						</c:forEach>
+						<!-- 최대 페이지보다 작거나 같으면 버튼활성화 -->
+						<c:if test="${(pagingMap.rangeStart + pagingMap.pageCnt) le pagingMap.lastPage}">
+							<li><a href="${pageContext.servletContext.contextPath}/board/list?pages=${pagingMap.rangeStart + pagingMap.pageCnt}">▶</a></li>
+						</c:if>
+						<!-- 최대 페이지보다 크면 버튼 비활성화 -->
+						<c:if test="${(pagingMap.rangeStart + pagingMap.pageCnt) gt pagingMap.lastPage}">
+							<li>▶</li>
+						</c:if>
+							
 					</ul>
 				</div>					
 				<!-- pager 추가 -->
@@ -63,7 +93,9 @@
 				
 				
 				<div class="bottom">
-					<a href="${pageContext.servletContext.contextPath}/board/write" id="new-book">글쓰기</a>
+					<c:if test="${authUser ne null}">
+						<a href="${pageContext.servletContext.contextPath}/board/write?pages=${pages}" id="new-book">글쓰기</a>
+					</c:if>
 				</div>				
 			</div>
 		</div>

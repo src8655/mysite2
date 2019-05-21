@@ -26,11 +26,13 @@
 		
 	</update>
 	
-	<select id="getList" resultType="boardvo">
+	<select id="getList" parameterType="java.util.Map" resultType="boardvo">
 		select a.no, title,contents,hit,DATE_FORMAT(reg_date,'%Y-%m-%d %H:%m:%s') as regDate,group_no as groupNo,order_no as orderNo,depth,user_no as userNo, b.name as userName
 		from board a, user b
 		where a.user_no=b.no
+		and title like CONCAT('%', #{kwd}, '%')
 		order by group_no desc, order_no asc
+		limit #{startNum}, #{boardCnt}
 	</select>
 	
 	<select id="getByNo" parameterType="long" resultType="boardvo">
@@ -45,5 +47,17 @@
 		title=#{title},
 		contents=#{contents}
 		where no=#{no}
+	</update>
+	
+	<delete id="delete" parameterType="long">
+		delete from board where no=#{no}
+	</delete>
+	
+	<select id="count" parameterType="string" resultType="Integer">
+		select count(*) from board where title like CONCAT('%', #{kwd}, '%')
+	</select>
+	
+	<update id="updateHit" parameterType="long">
+		update board set hit=hit+1 where no=#{no}
 	</update>
 </mapper>

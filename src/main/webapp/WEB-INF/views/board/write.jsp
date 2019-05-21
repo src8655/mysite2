@@ -17,6 +17,8 @@
 					<input type="hidden" name="groupNo" value="${groupNo}" />
 					<input type="hidden" name="orderNo" value="${orderNo}" />
 					<input type="hidden" name="depth" value="${depth}" />
+					<input type="hidden" name="no" value="${no}" />
+					<input type="hidden" name="pages" value="${pages}" />
 					<table class="tbl-ex">
 						<tr>
 							<th colspan="2">글쓰기</th>
@@ -33,8 +35,8 @@
 						</tr>
 					</table>
 					<div class="bottom">
-						<c:if test="${no eq -1}"><a href="${pageContext.servletContext.contextPath}/board/list">취소</a></c:if>
-						<c:if test="${no ne -1}"><a href="${pageContext.servletContext.contextPath}/board/view?no=${no}">취소</a></c:if>
+						<c:if test="${no eq -1}"><a href="${pageContext.servletContext.contextPath}/board/list?pages=${pages}">취소</a></c:if>
+						<c:if test="${no ne -1}"><a href="${pageContext.servletContext.contextPath}/board/view?no=${no}&pages=${pages}">취소</a></c:if>
 						<input type="submit" value="등록">
 					</div>
 				</form>				

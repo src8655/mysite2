@@ -1,6 +1,7 @@
 package com.cafe24.mysite.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,8 @@ public class BoardDao {
 		return result == 1;
 	}
 	
-	public List<BoardVo> getList() {
-		return sqlSession.selectList("board.getList");
+	public List<BoardVo> getList(Map daoMap) {
+		return sqlSession.selectList("board.getList", daoMap);
 	}
 	
 	public BoardVo getByNo(Long no) {
@@ -29,6 +30,20 @@ public class BoardDao {
 	
 	public boolean update(BoardVo boardVo) {
 		int result = sqlSession.update("board.update", boardVo);
+		return result == 1;
+	}
+	
+	public boolean delete(Long no) {
+		int result = sqlSession.delete("board.delete", no);
+		return result == 1;
+	}
+	
+	public int getCount(String kwd) {
+		return (Integer)sqlSession.selectOne("board.count", kwd);
+	}
+	
+	public boolean updateHit(Long no) {
+		int result = sqlSession.update("updateHit", no);
 		return result == 1;
 	}
 }

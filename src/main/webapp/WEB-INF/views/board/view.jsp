@@ -39,9 +39,13 @@
 					</tr>
 				</table>
 				<div class="bottom">
-					<a href="${pageContext.servletContext.contextPath}/board/list">글목록</a>
-					<a href="${pageContext.servletContext.contextPath}/board/modify?no=${boardVo.no}">글수정</a>
-					<a href="${pageContext.servletContext.contextPath}/board/write?no=${boardVo.no}&groupNo=${boardVo.groupNo}&orderNo=${boardVo.orderNo}&depth=${boardVo.depth}">답글</a>
+					<a href="${pageContext.servletContext.contextPath}/board/list?pages=${pages}">글목록</a>
+					<c:if test="${authUser ne null}">
+						<c:if test="${authUser.no eq boardVo.userNo}">
+							<a href="${pageContext.servletContext.contextPath}/board/modify?no=${boardVo.no}&pages=${pages}">글수정</a>
+						</c:if>
+						<a href="${pageContext.servletContext.contextPath}/board/write?no=${boardVo.no}&groupNo=${boardVo.groupNo}&orderNo=${boardVo.orderNo}&depth=${boardVo.depth}&pages=${pages}">답글</a>
+					</c:if>
 				</div>
 			</div>
 		</div>
