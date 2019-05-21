@@ -5,7 +5,7 @@
 
 	<select id="getlist" resultType="guestbookvo">
 	<![CDATA[
-		ssselect no, name, contents, date_format(reg_date, '%Y-%m-%d %h:%i:%s') as regdate
+		select no, name, contents, date_format(reg_date, '%Y-%m-%d %h:%i:%s') as regdate
 		from guestbook
 		order by no desc
 	]]>
