@@ -14,7 +14,7 @@
 		<div id="content">
 			<div id="board">
 				<form id="search_form" action="${pageContext.servletContext.contextPath}/board/list" method="get">
-					<input type="text" id="kwd" name="kwd" value="${kwd_decode}" />
+					<input type="text" id="kwd" name="kwd" value="${bpv.kwd_decode}" />
 					<input type="submit" value="찾기" />
 				</form>
 				<table class="tbl-ex">
@@ -33,7 +33,12 @@
 							<c:if test="${data.depth ne 0}">
 								<img src="${pageContext.servletContext.contextPath}/assets/images/reply.png" alt="답글" />
 							</c:if>
-							<a href="${pageContext.servletContext.contextPath}/board/view?no=${data.no}&pages=${pages}">${data.title}</a>
+							<a href="${pageContext.servletContext.contextPath}/board/view?no=${data.no}&pages=${bpv.pages}&kwd=${bpv.kwd_encode}">
+								${data.title}
+								<c:if test="${data.commentCount ne 0}">
+									<span style="color:red;font-size:11px;font-weight:normal;">(${data.commentCount})</span>
+								</c:if>
+							</a>
 						</td>
 						<td>${data.userName}</td>
 						<td>${data.hit}</td>
@@ -41,7 +46,7 @@
 						<td>
 							<c:if test="${authUser ne null}">
 							<c:if test="${authUser.no eq data.userNo}">
-								<a href="${pageContext.servletContext.contextPath}/board/delete?no=${data.no}&pages=${pages}" class="del">삭제</a>
+								<a href="${pageContext.servletContext.contextPath}/board/delete?no=${data.no}&pages=${bpv.pages}&kwd=${bpv.kwd_encode}" class="del">삭제</a>
 							</c:if>
 							</c:if>
 						</td>
@@ -61,7 +66,7 @@
 						</c:if>
 						<!-- 1보다 같거나 크면 버튼 활성화-->
 						<c:if test="${(pagingMap.rangeStart - 1) ge 1}">
-							<li><a href="${pageContext.servletContext.contextPath}/board/list?pages=${pagingMap.rangeStart - 1}">◀</a></li>
+							<li><a href="${pageContext.servletContext.contextPath}/board/list?pages=${pagingMap.rangeStart - 1}&kwd=${bpv.kwd_encode}">◀</a></li>
 						</c:if>
 						<c:forEach begin="${pagingMap.rangeStart}" end="${pagingMap.rangeStart + pagingMap.pageCnt - 1}" var="i">
 							<!-- 최대 페이지를 넘어가면 비활성화 -->
@@ -69,17 +74,17 @@
 								<li>${i}</li>
 							</c:if>
 							<c:if test="${i le pagingMap.lastPage}">
-								<c:if test="${i eq pages}">
+								<c:if test="${i eq bpv.pages}">
 									<li class="selected">${i}</li>
 								</c:if>
-								<c:if test="${i ne pages}">
-									<li><a href="${pageContext.servletContext.contextPath}/board/list?pages=${i}">${i}</a></li>
+								<c:if test="${i ne bpv.pages}">
+									<li><a href="${pageContext.servletContext.contextPath}/board/list?pages=${i}&kwd=${bpv.kwd_encode}">${i}</a></li>
 								</c:if>
 							</c:if>
 						</c:forEach>
 						<!-- 최대 페이지보다 작거나 같으면 버튼활성화 -->
 						<c:if test="${(pagingMap.rangeStart + pagingMap.pageCnt) le pagingMap.lastPage}">
-							<li><a href="${pageContext.servletContext.contextPath}/board/list?pages=${pagingMap.rangeStart + pagingMap.pageCnt}">▶</a></li>
+							<li><a href="${pageContext.servletContext.contextPath}/board/list?pages=${pagingMap.rangeStart + pagingMap.pageCnt}&kwd=${bpv.kwd_encode}">▶</a></li>
 						</c:if>
 						<!-- 최대 페이지보다 크면 버튼 비활성화 -->
 						<c:if test="${(pagingMap.rangeStart + pagingMap.pageCnt) gt pagingMap.lastPage}">
@@ -94,7 +99,7 @@
 				
 				<div class="bottom">
 					<c:if test="${authUser ne null}">
-						<a href="${pageContext.servletContext.contextPath}/board/write?pages=${pages}" id="new-book">글쓰기</a>
+						<a href="${pageContext.servletContext.contextPath}/board/write?pages=${bpv.pages}&kwd=${bpv.kwd_encode}" id="new-book">글쓰기</a>
 					</c:if>
 				</div>				
 			</div>

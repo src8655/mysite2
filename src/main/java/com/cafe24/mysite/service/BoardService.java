@@ -19,7 +19,7 @@ public class BoardService {
 	@Autowired
 	BoardDao boardDao;
 	
-	public boolean boardWrite(BoardVo boardVo, UserVo authUser) {
+	public Long boardWrite(BoardVo boardVo, UserVo authUser) {
 		boardVo.setUserNo(authUser.getNo());
 		boardVo.setHit(0);
 		
@@ -31,6 +31,7 @@ public class BoardService {
 			//답글이면
 			boardVo.setOrderNo(boardVo.getOrderNo()+1);
 			boardVo.setDepth(boardVo.getDepth()+1);
+			boardDao.updateOrderNo(boardVo);
 		}
 		
 		return boardDao.insert(boardVo);
@@ -65,6 +66,11 @@ public class BoardService {
 	}
 	
 	public BoardVo getOne(Long no) {
+		BoardVo boardVo = boardDao.getByNo(no);
+		boardVo.setContents(boardVo.getContents().replaceAll("\\n", "<br />"));
+		return boardVo;
+	}
+	public BoardVo getOneModify(Long no) {
 		return boardDao.getByNo(no);
 	}
 	

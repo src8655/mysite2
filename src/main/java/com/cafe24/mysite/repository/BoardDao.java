@@ -15,8 +15,12 @@ public class BoardDao {
 	@Autowired
 	SqlSession sqlSession;
 	
-	public boolean insert(BoardVo boardVo) {
-		int result = sqlSession.update("board.insert", boardVo);
+	public Long insert(BoardVo boardVo) {
+		int result = sqlSession.insert("board.insert", boardVo);
+		return boardVo.getNo();
+	}
+	public boolean updateOrderNo(BoardVo boardVo) {
+		int result = sqlSession.update("board.updateOrderNo", boardVo);
 		return result == 1;
 	}
 	

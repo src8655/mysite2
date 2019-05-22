@@ -1,8 +1,16 @@
 package com.cafe24.mysite.vo;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class UserVo {
 	private Long no;
+	@NotEmpty
+	@Length(min=2, max=8)
 	private String name;
+	@Email
+	@NotEmpty
 	private String email;
 	private String password;
 	private String gender;
@@ -20,6 +28,7 @@ public class UserVo {
 	public void setNo(Long no) {
 		this.no = no;
 	}
+	
 	public String getName() {
 		return name;
 	}

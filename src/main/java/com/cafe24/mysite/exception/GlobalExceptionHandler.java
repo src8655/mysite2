@@ -33,7 +33,8 @@ public class GlobalExceptionHandler {
 		StringWriter errors = new StringWriter();
 		e.printStackTrace(new PrintWriter(errors));
 		
-		LOGGER.error(errors.toString());
+		System.out.println(errors.toString());
+		//LOGGER.error(errors.toString());
 		
 		//json 요청에서 에러 발생 시
 		String accept = request.getHeader("accept");

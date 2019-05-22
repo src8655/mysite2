@@ -14,11 +14,12 @@
 		<div id="content">
 			<div id="board">
 				<form class="board-form" method="post" action="${pageContext.servletContext.contextPath}/board/write">
-					<input type="hidden" name="groupNo" value="${groupNo}" />
-					<input type="hidden" name="orderNo" value="${orderNo}" />
-					<input type="hidden" name="depth" value="${depth}" />
-					<input type="hidden" name="no" value="${no}" />
-					<input type="hidden" name="pages" value="${pages}" />
+					<input type="hidden" name="groupNo" value="${bpv.groupNo}" />
+					<input type="hidden" name="orderNo" value="${bpv.orderNo}" />
+					<input type="hidden" name="depth" value="${bpv.depth}" />
+					<input type="hidden" name="no" value="${bpv.no}" />
+					<input type="hidden" name="pages" value="${bpv.pages}" />
+					<input type="hidden" name="kwd" value="${bpv.kwd_decode}" />
 					<table class="tbl-ex">
 						<tr>
 							<th colspan="2">글쓰기</th>
@@ -35,8 +36,8 @@
 						</tr>
 					</table>
 					<div class="bottom">
-						<c:if test="${no eq -1}"><a href="${pageContext.servletContext.contextPath}/board/list?pages=${pages}">취소</a></c:if>
-						<c:if test="${no ne -1}"><a href="${pageContext.servletContext.contextPath}/board/view?no=${no}&pages=${pages}">취소</a></c:if>
+						<c:if test="${bpv.no eq -1}"><a href="${pageContext.servletContext.contextPath}/board/list?pages=${bpv.pages}&kwd=${bpv.kwd_encode}">취소</a></c:if>
+						<c:if test="${bpv.no ne -1}"><a href="${pageContext.servletContext.contextPath}/board/view?no=${bpv.no}&pages=${bpv.pages}&kwd=${bpv.kwd_encode}">취소</a></c:if>
 						<input type="submit" value="등록">
 					</div>
 				</form>				

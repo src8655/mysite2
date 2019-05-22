@@ -3,11 +3,8 @@
 
 <mapper namespace="board">
 
-	<update id="insert" parameterType="boardvo">
+	<insert id="insert" parameterType="boardvo" useGeneratedKeys="true" keyProperty="no">
 
-		<if test="groupNo != -1">
-			update board set order_no=order_no+1 where order_no >= #{orderNo};
-		</if>
 		insert into board values(
 		null,
 		#{title},
@@ -22,12 +19,16 @@
 		</if>
 		#{orderNo},
 		#{depth},
-		#{userNo});
+		#{userNo})
 		
+	</insert>
+	
+	<update id="updateOrderNo" parameterType="boardvo">
+		update board set order_no=order_no+1 where order_no >= #{orderNo} and group_no=#{groupNo}
 	</update>
 	
 	<select id="getList" parameterType="java.util.Map" resultType="boardvo">
-		select a.no, title,contents,hit,DATE_FORMAT(reg_date,'%Y-%m-%d %H:%m:%s') as regDate,group_no as groupNo,order_no as orderNo,depth,user_no as userNo, b.name as userName
+		select a.no, title,contents,hit,DATE_FORMAT(reg_date,'%Y-%m-%d %H:%m:%s') as regDate,group_no as groupNo,order_no as orderNo,depth,user_no as userNo, b.name as userName, (select count(*) from comment where board_no=a.no) as commentCount
 		from board a, user b
 		where a.user_no=b.no
 		and title like CONCAT('%', #{kwd}, '%')
