@@ -17,7 +17,9 @@
 		#{orderNo},
 		#{depth},
 		#{userNo},
-		#{boardNo})
+		#{boardNo},
+		#{parentNo},
+		#{status})
 		
 	</insert>
 	
@@ -26,7 +28,19 @@
 	</update>
 	
 	<select id="getList" parameterType="long" resultType="commentvo">
-		select a.no, a.contents, DATE_FORMAT(a.reg_date,'%Y-%m-%d') as regDate, a.group_no as groupNo, a.order_no as orderNo, a.depth, a.user_no as userNo, a.board_no as boardNo, b.name as userName
+		select
+		a.no,
+		a.contents,
+		DATE_FORMAT(a.reg_date,'%Y-%m-%d') as regDate,
+		a.group_no as groupNo,
+		a.order_no as orderNo,
+		a.depth,
+		a.user_no as userNo,
+		a.board_no as boardNo,
+		b.name as userName,
+		a.parent_no as parentNo,
+		a.status
+		
 		from comment a, user b
 		where a.user_no=b.no
 		and board_no=#{boardNo}
@@ -38,9 +52,36 @@
 	</delete>
 	
 	<select id="getByNo" parameterType="long" resultType="commentvo">
-		select no, contents, DATE_FORMAT(reg_date,'%Y-%m-%d') as regDate, group_no as groupNo, order_no as orderNo, depth, user_no as userNo, board_no as boardNo
+		select
+		no,
+		contents,
+		DATE_FORMAT(reg_date,'%Y-%m-%d') as regDate,
+		group_no as groupNo,
+		order_no as orderNo,
+		depth,
+		user_no as userNo,
+		board_no as boardNo,
+		parent_no as parentNo,
+		status
+		
 		from comment
 		where no=#{no}
+	</select>
+	
+	<select id="countchild" parameterType="long" resultType="int">
+		select count(*)
+		from comment
+		where parent_no=#{no}
+	</select>
+	<update id="setdelmode" parameterType="long">
+		update comment set
+		status='-1'
+		where no=#{no}
+	</update>
+	<select id="finddel" resultType="commentvo">
+		select c.no as no
+		from (select a.no, (select count(*) from comment as b where parent_no=a.no and status = 1) as bb from comment as a where status=-1) as c 
+		where c.bb=0
 	</select>
 	
 </mapper>

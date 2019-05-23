@@ -26,6 +26,9 @@ import com.cafe24.mysite.vo.BoardVo;
 import com.cafe24.mysite.vo.BoardparamVo;
 import com.cafe24.mysite.vo.CommentVo;
 import com.cafe24.mysite.vo.UserVo;
+import com.cafe24.security.Auth;
+import com.cafe24.security.Auth.Role;
+import com.cafe24.security.AuthUser;
 
 @Controller
 @RequestMapping("/board")
@@ -56,36 +59,28 @@ public class BoardController {
 		return "board/list";
 	}
 	
+	@Auth
 	@RequestMapping(value="/write", method = RequestMethod.GET)
 	public String write(
 			@ModelAttribute("bpv") BoardparamVo bpv,
-			HttpSession session
+			@AuthUser UserVo authUser
 			) throws UnsupportedEncodingException {
 		bpv.setKwd_decode(URLDecoder.decode(bpv.getKwd(), "utf-8"));
 		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
-		
-		if(session == null) 
-			if(bpv.getNo() == -1) return "redirect:/board/list";
-			else return "redirect:/board/list";
-		UserVo authUser = (UserVo)session.getAttribute("authUser");
-		if(authUser == null) 
-			if(bpv.getNo() == -1) return "redirect:/board/list";
-			else return "redirect:/board/list";
+
 		
 		return "board/write";
 	}
+	
+	@Auth
 	@RequestMapping(value="/write", method = RequestMethod.POST)
 	public String write(
 			@ModelAttribute("bpv") BoardparamVo bpv,
 			@ModelAttribute BoardVo boardVo,
-			HttpSession session
+			@AuthUser UserVo authUser
 			) throws UnsupportedEncodingException {
 		bpv.setKwd_decode(URLDecoder.decode(bpv.getKwd(), "utf-8"));
 		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
-		
-		if(session == null) return "redirect:/board/list";
-		UserVo authUser = (UserVo)session.getAttribute("authUser");
-		if(authUser == null) return "redirect:/board/list";
 		
 		Long newNo = boardService.boardWrite(boardVo, authUser);
 		
@@ -95,77 +90,64 @@ public class BoardController {
 
 	@RequestMapping("/view")
 	public String view(
-			@RequestParam(value="kwd", required = true, defaultValue = "") String kwd,
-			@RequestParam(value="pages", required = true, defaultValue = "1") int pages,
-			@RequestParam(value="no", required = true, defaultValue = "-1") Long no,
+			@ModelAttribute("bpv") BoardparamVo bpv,
 			@CookieValue(value="mysite_board_hit", required = true, defaultValue = "-1") String cookie,
 			HttpServletResponse response,
 			Model model
 			) throws UnsupportedEncodingException {
-		String kwd_decode = URLDecoder.decode(kwd, "utf-8");
-		String kwd_encode = URLEncoder.encode(kwd_decode, "utf-8");
-		model.addAttribute("kwd_decode", kwd_decode);
-		model.addAttribute("kwd_encode", kwd_encode);
-		model.addAttribute("pages", pages);
-		System.out.println(cookie + "**************************** cookie");
+		bpv.setKwd_decode(URLDecoder.decode(bpv.getKwd(), "utf-8"));
+		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
+		
 		
 		//이미 있으면 null을 반환
-		cookie = boardService.updateHit(no, cookie);
+		cookie = boardService.updateHit(bpv.getNo(), cookie);
 		if(cookie != null) {
 			Cookie co = new Cookie("mysite_board_hit", cookie);
 			co.setMaxAge(60*60*24);
 			response.addCookie(co);
 		}
 		
-		BoardVo boardVo = boardService.getOne(no);
+		BoardVo boardVo = boardService.getOne(bpv.getNo());
 		model.addAttribute("boardVo", boardVo);
 		
 		
 		
 		//댓글
-		List<CommentVo> commentList = commentService.getList(no);
+		List<CommentVo> commentList = commentService.getList(bpv.getNo());
 		model.addAttribute("commentList", commentList);
 		
 		return "board/view";
 	}
 
+	@Auth
 	@RequestMapping(value="/modify", method = RequestMethod.GET)
 	public String modify(
-			@RequestParam(value="kwd", required = true, defaultValue = "") String kwd,
-			@RequestParam(value="pages", required = true, defaultValue = "1") int pages,
-			@RequestParam(value="no", required = true, defaultValue = "-1") Long no,
+			@ModelAttribute("bpv") BoardparamVo bpv,
 			Model model,
-			HttpSession session
+			@AuthUser UserVo authUser
 			) throws UnsupportedEncodingException {
-		String kwd_decode = URLDecoder.decode(kwd, "utf-8");
-		String kwd_encode = URLEncoder.encode(kwd_decode, "utf-8");
-		model.addAttribute("kwd_decode", kwd_decode);
-		model.addAttribute("kwd_encode", kwd_encode);
-		model.addAttribute("pages", pages);
+		bpv.setKwd_decode(URLDecoder.decode(bpv.getKwd(), "utf-8"));
+		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
 		
-		if(session == null) return "redirect:/board/list";
-		UserVo authUser = (UserVo)session.getAttribute("authUser");
-		if(authUser == null) return "redirect:/board/list";
 		
-		BoardVo boardVo = boardService.getOneModify(no);
+		BoardVo boardVo = boardService.getOneModify(bpv.getNo());
 		if(authUser.getNo() != boardVo.getUserNo()) return "redirect:/board/list";
 		
 		model.addAttribute("boardVo", boardVo);
 		
 		return "board/modify";
 	}
+	
+	@Auth
 	@RequestMapping(value="/modify", method = RequestMethod.POST)
 	public String modify(
-			@RequestParam(value="kwd", required = true, defaultValue = "") String kwd,
-			@RequestParam(value="pages", required = true, defaultValue = "1") int pages,
+			@ModelAttribute("bpv") BoardparamVo bpv,
 			@ModelAttribute BoardVo boardVo,
-			HttpSession session
+			@AuthUser UserVo authUser
 			) throws UnsupportedEncodingException {
-		String kwd_decode = URLDecoder.decode(kwd, "utf-8");
-		String kwd_encode = URLEncoder.encode(kwd_decode, "utf-8");
-		if(session == null) return "redirect:/board/list";
-		UserVo authUser = (UserVo)session.getAttribute("authUser");
-		if(authUser == null) return "redirect:/board/list";
+		bpv.setKwd_decode(URLDecoder.decode(bpv.getKwd(), "utf-8"));
+		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
+		
 		
 		BoardVo boardVoOld = boardService.getOne(boardVo.getNo());
 		if(authUser.getNo() != boardVoOld.getUserNo()) return "redirect:/board/list";
@@ -173,25 +155,23 @@ public class BoardController {
 		boardService.modify(boardVo);
 		
 		
-		return "redirect:/board/view?no="+boardVo.getNo() + "&pages="+pages+"&kwd="+kwd_encode;
+		return "redirect:/board/view?no="+boardVo.getNo() + "&pages="+bpv.getPages()+"&kwd="+bpv.getKwd_encode();
 	}
 	
+	@Auth
 	@RequestMapping("/delete")
 	public String delete(
-			@RequestParam(value="kwd", required = true, defaultValue = "") String kwd,
-			@RequestParam(value="pages", required = true, defaultValue = "1") int pages,
-			@RequestParam(value="no", required = true, defaultValue = "-1") Long no,
-			HttpSession session
+			@ModelAttribute("bpv") BoardparamVo bpv,
+			@AuthUser UserVo authUser
 			) throws UnsupportedEncodingException {
-		String kwd_decode = URLDecoder.decode(kwd, "utf-8");
-		String kwd_encode = URLEncoder.encode(kwd_decode, "utf-8");
+		bpv.setKwd_decode(URLDecoder.decode(bpv.getKwd(), "utf-8"));
+		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
 		
-		 if(session == null) return "redirect:/board/list";
-		 UserVo authUser = (UserVo)session.getAttribute("authUser");
-		 if(authUser == null) return "redirect:/board/list";
-		 if(!boardService.delOne(no, authUser)) return "redirect:/board/list";
+		 
+		 
+		 if(!boardService.delOne(bpv.getNo(), authUser)) return "redirect:/board/list";
 		
-		return "redirect:/board/list?pages="+pages+"&kwd="+kwd_encode;
+		return "redirect:/board/list?pages="+bpv.getPages()+"&kwd="+bpv.getKwd_encode();
 	}
 
 }

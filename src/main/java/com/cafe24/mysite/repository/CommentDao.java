@@ -33,4 +33,15 @@ public class CommentDao {
 	public CommentVo getByNo(Long no) {
 		return (CommentVo)sqlSession.selectOne("comment.getByNo", no);
 	}
+	
+	public int countchild(Long no) {
+		return (Integer)sqlSession.selectOne("comment.countchild", no);
+	}
+	public boolean setdelmode(Long no) {
+		int result = sqlSession.update("comment.setdelmode", no);
+		return result == 1;
+	}
+	public List<CommentVo> finddel() {
+		return sqlSession.selectList("comment.finddel");
+	}
 }

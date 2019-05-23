@@ -4,7 +4,7 @@ public class BoardparamVo {
 	private int groupNo = -1;
 	private int orderNo = -1;
 	private int depth = -1;
-	private int no = -1;
+	private Long no = -1L;
 	private int pages = 1;
 	private String kwd = "";
 	private String kwd_decode = "";
@@ -27,12 +27,6 @@ public class BoardparamVo {
 	}
 	public void setDepth(int depth) {
 		this.depth = depth;
-	}
-	public int getNo() {
-		return no;
-	}
-	public void setNo(int no) {
-		this.no = no;
 	}
 	public int getPages() {
 		return pages;
@@ -57,6 +51,12 @@ public class BoardparamVo {
 	}
 	public void setKwd_encode(String kwd_encode) {
 		this.kwd_encode = kwd_encode;
+	}
+	public Long getNo() {
+		return no;
+	}
+	public void setNo(Long no) {
+		this.no = no;
 	}
 	
 }

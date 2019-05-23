@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cafe24.mysite.repository.CommentDao;
+import com.cafe24.mysite.vo.BoardVo;
 import com.cafe24.mysite.vo.CommentVo;
 import com.cafe24.mysite.vo.UserVo;
 
@@ -18,6 +19,7 @@ public class CommentService {
 	
 	public boolean commentWrite(CommentVo commentVo, UserVo authUser) {
 		commentVo.setUserNo(authUser.getNo());
+		commentVo.setStatus(1);
 		
 		//첫글이면
 		if(commentVo.getGroupNo() == -1) {
@@ -27,6 +29,7 @@ public class CommentService {
 			//답글이면
 			commentVo.setOrderNo(commentVo.getOrderNo()+1);
 			commentVo.setDepth(commentVo.getDepth()+1);
+			commentVo.setParentNo(commentVo.getNo());
 			commentDao.updateOrderNo(commentVo);
 		}
 		
@@ -49,6 +52,23 @@ public class CommentService {
 		if(cvo.getUserNo() != authUser.getNo())
 			return false;
 		
-		return commentDao.delete(commentVo.getNo());
+		boolean result = false;
+		
+		//자식 개수 확인
+		int countChild = commentDao.countchild(commentVo.getNo());
+		//자식이 있으면 상태만 삭제로 변경
+		if(countChild != 0) {
+			result = commentDao.setdelmode(commentVo.getNo());
+		}else {
+			//자식이 없으면 본인것을 삭제
+			result = commentDao.delete(commentVo.getNo());
+			//그리고 자식이 없고 상태가 -1인 것을 찾아 삭제
+			List<CommentVo> list = commentDao.finddel();
+			for(CommentVo vo : list) {
+				commentDao.delete(vo.getNo());
+			}
+		}
+		
+		return result;
 	}
 }

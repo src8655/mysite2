@@ -27,6 +27,19 @@
 						<th>&nbsp;</th>
 					</tr>				
 					<c:forEach items="${list}" var="data">
+					<c:if test="${data.status ne 1}">
+					<tr>
+						<td>${pagingMap.count - pagingMap.startNum - cnt}</td>
+						<td style="text-align:left;padding-left:${20*data.depth}px;">
+							삭제된 게시글 입니다.
+						</td>
+						<td>-</td>
+						<td>-</td>
+						<td>-</td>
+						<td>-</td>
+					</tr>
+					</c:if>
+					<c:if test="${data.status eq 1}">
 					<tr>
 						<td>${pagingMap.count - pagingMap.startNum - cnt}</td>
 						<td style="text-align:left;padding-left:${20*data.depth}px;">
@@ -51,6 +64,7 @@
 							</c:if>
 						</td>
 					</tr>
+					</c:if>
 					<c:set var="cnt" scope="page" value="${cnt+1}"></c:set>
 					</c:forEach>
 

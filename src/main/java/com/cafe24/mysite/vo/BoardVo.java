@@ -4,81 +4,131 @@ public class BoardVo {
 	private Long no;
 	private String title;
 	private String contents;
-	private int hit;
+	private Integer hit;
 	private String regDate;
-	private int groupNo;
-	private int orderNo;
-	private int depth;
+	private Integer groupNo;
+	private Integer orderNo;
+	private Integer depth;
 	private Long userNo;
-	private int commentCount;
+	private Long parentNo;
+	private String file1;
+	private Integer status;
+	
+	private Integer commentCount;
 	
 	private String userName;
+
 	public Long getNo() {
 		return no;
 	}
+
 	public void setNo(Long no) {
 		this.no = no;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getContents() {
 		return contents;
 	}
+
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	public int getHit() {
+
+	public Integer getHit() {
 		return hit;
 	}
-	public void setHit(int hit) {
+
+	public void setHit(Integer hit) {
 		this.hit = hit;
 	}
+
 	public String getRegDate() {
 		return regDate;
 	}
+
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
 	}
-	public int getGroupNo() {
+
+	public Integer getGroupNo() {
 		return groupNo;
 	}
-	public void setGroupNo(int groupNo) {
+
+	public void setGroupNo(Integer groupNo) {
 		this.groupNo = groupNo;
 	}
-	public int getOrderNo() {
+
+	public Integer getOrderNo() {
 		return orderNo;
 	}
-	public void setOrderNo(int orderNo) {
+
+	public void setOrderNo(Integer orderNo) {
 		this.orderNo = orderNo;
 	}
-	public int getDepth() {
+
+	public Integer getDepth() {
 		return depth;
 	}
-	public void setDepth(int depth) {
+
+	public void setDepth(Integer depth) {
 		this.depth = depth;
 	}
+
 	public Long getUserNo() {
 		return userNo;
 	}
+
 	public void setUserNo(Long userNo) {
 		this.userNo = userNo;
 	}
+
+	public String getFile1() {
+		return file1;
+	}
+
+	public void setFile1(String file1) {
+		this.file1 = file1;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Integer getCommentCount() {
+		return commentCount;
+	}
+
+	public void setCommentCount(Integer commentCount) {
+		this.commentCount = commentCount;
+	}
+
 	public String getUserName() {
 		return userName;
 	}
+
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public int getCommentCount() {
-		return commentCount;
+
+	public Long getParentNo() {
+		return parentNo;
 	}
-	public void setCommentCount(int commentCount) {
-		this.commentCount = commentCount;
+
+	public void setParentNo(Long parentNo) {
+		this.parentNo = parentNo;
 	}
-	
+
 	
 }

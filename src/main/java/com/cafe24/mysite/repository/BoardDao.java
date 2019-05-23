@@ -47,7 +47,18 @@ public class BoardDao {
 	}
 	
 	public boolean updateHit(Long no) {
-		int result = sqlSession.update("updateHit", no);
+		int result = sqlSession.update("board.updateHit", no);
 		return result == 1;
+	}
+	
+	public int countchild(Long no) {
+		return (Integer)sqlSession.selectOne("board.countchild", no);
+	}
+	public boolean setdelmode(Long no) {
+		int result = sqlSession.update("board.setdelmode", no);
+		return result == 1;
+	}
+	public List<BoardVo> finddel() {
+		return sqlSession.selectList("board.finddel");
 	}
 }

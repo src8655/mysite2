@@ -19,7 +19,10 @@
 		</if>
 		#{orderNo},
 		#{depth},
-		#{userNo})
+		#{userNo},
+		#{parentNo},
+		#{file1},
+		#{status})
 		
 	</insert>
 	
@@ -28,7 +31,22 @@
 	</update>
 	
 	<select id="getList" parameterType="java.util.Map" resultType="boardvo">
-		select a.no, title,contents,hit,DATE_FORMAT(reg_date,'%Y-%m-%d %H:%m:%s') as regDate,group_no as groupNo,order_no as orderNo,depth,user_no as userNo, b.name as userName, (select count(*) from comment where board_no=a.no) as commentCount
+		select
+		a.no,
+		title,
+		contents,
+		hit,
+		DATE_FORMAT(reg_date,'%Y-%m-%d %H:%m:%s') as regDate,
+		group_no as groupNo,
+		order_no as orderNo,
+		depth,
+		user_no as userNo,
+		b.name as userName,
+		(select count(*) from comment c where board_no=a.no and c.status=1) as commentCount,
+		parent_no as parentNo,
+		file1,
+		status
+		
 		from board a, user b
 		where a.user_no=b.no
 		and title like CONCAT('%', #{kwd}, '%')
@@ -37,7 +55,21 @@
 	</select>
 	
 	<select id="getByNo" parameterType="long" resultType="boardvo">
-		select a.no, title,contents,hit,DATE_FORMAT(reg_date,'%Y-%m-%d %H:%m:%s') as regDate,group_no as groupNo,order_no as orderNo,depth,user_no as userNo, b.name as userName
+		select
+		a.no,
+		title,
+		contents,
+		hit,
+		DATE_FORMAT(reg_date,'%Y-%m-%d %H:%m:%s') as regDate,
+		group_no as groupNo,
+		order_no as orderNo,
+		depth,
+		user_no as userNo,
+		b.name as userName,
+		parent_no as parentNo,
+		file1,
+		status
+		
 		from board a, user b
 		where a.user_no=b.no
 		and a.no=#{no}
@@ -61,4 +93,21 @@
 	<update id="updateHit" parameterType="long">
 		update board set hit=hit+1 where no=#{no}
 	</update>
+	
+	<select id="countchild" parameterType="long" resultType="int">
+		select count(*)
+		from board
+		where parent_no=#{no}
+	</select>
+	<update id="setdelmode" parameterType="long">
+		update board set
+		status='-1'
+		where no=#{no}
+	</update>
+	<select id="finddel" resultType="boardvo">
+		select c.no as no
+		from (select a.no, (select count(*) from board as b where parent_no=a.no and status = 1) as bb from board as a where status=-1) as c 
+		where c.bb=0
+	</select>
+	
 </mapper>

@@ -22,6 +22,7 @@ public class BoardService {
 	public Long boardWrite(BoardVo boardVo, UserVo authUser) {
 		boardVo.setUserNo(authUser.getNo());
 		boardVo.setHit(0);
+		boardVo.setStatus(1);
 		
 		//첫글이면
 		if(boardVo.getGroupNo() == -1) {
@@ -31,6 +32,7 @@ public class BoardService {
 			//답글이면
 			boardVo.setOrderNo(boardVo.getOrderNo()+1);
 			boardVo.setDepth(boardVo.getDepth()+1);
+			boardVo.setParentNo(boardVo.getNo());
 			boardDao.updateOrderNo(boardVo);
 		}
 		
@@ -83,7 +85,26 @@ public class BoardService {
 		if(authUser.getNo() != boardVo.getUserNo())
 			return false;
 		
-		return boardDao.delete(no);
+		boolean result = false;
+		
+		//자식 개수 확인
+		int countChild = boardDao.countchild(no);
+		//자식이 있으면 상태만 삭제로 변경
+		if(countChild != 0) {
+			result = boardDao.setdelmode(no);
+		}else {
+			//자식이 없으면 본인것을 삭제
+			result = boardDao.delete(no);
+			//그리고 자식이 없고 상태가 -1인 것을 찾아 삭제
+			List<BoardVo> list = boardDao.finddel();
+			for(BoardVo vo : list) {
+				boardDao.delete(vo.getNo());
+			}
+		}
+		
+		
+		
+		return result;
 	}
 	
 	public String updateHit(Long no, String cookie) {

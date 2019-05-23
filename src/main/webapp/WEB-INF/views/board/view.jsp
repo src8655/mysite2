@@ -51,6 +51,29 @@ function showhide(obj) {
 				
 
 				<c:forEach items="${commentList}" var="commentData">
+				
+				<c:if test="${commentData.status ne 1}">
+				<table class="tbl-ex" style="border-bottom:0px;">
+				<col />
+				<col width="100" />
+				<col />
+				<col width="80" />
+					<tr>
+						<td style="width:${commentData.depth * 20}px;padding:0px;border-top:0px;border-bottom:0px;text-align:right;">
+							<c:if test="${commentData.depth ne 0}">
+								<img src="${pageContext.servletContext.contextPath}/assets/images/reply.png" alt="답글" />
+							</c:if>
+						</td>
+						<td style="font-weight:bold;text-align:center;color:#000000;background:#eeeeee;">
+							-
+						</td>
+						<td>삭제된 댓글입니다.</td>
+						<td style="text-align:center;"></td>
+					</tr>
+				</table>
+				</c:if>
+				
+				<c:if test="${commentData.status eq 1}">
 				<table class="tbl-ex" style="border-bottom:0px;">
 				<col />
 				<col width="100" />
@@ -70,7 +93,7 @@ function showhide(obj) {
 						<td style="text-align:center;">
 							<c:if test="${authUser ne null}">
 								<c:if test="${authUser.no eq commentData.userNo}">
-									<a href="${pageContext.servletContext.contextPath}/board/comment/delete?no=${commentData.no}&boardNo=${boardVo.no}&pages=${pages}&kwd=${kwd_encode}">[삭제]</a>
+									<a href="${pageContext.servletContext.contextPath}/board/comment/delete?no=${commentData.no}&boardNo=${boardVo.no}&pages=${bpv.pages}&kwd=${bpv.kwd_encode}">[삭제]</a>
 									<br />
 								</c:if>
 								<a href="#100" onclick="showhide('commentRe_${commentData.no}')">[답글]</a>
@@ -86,8 +109,8 @@ function showhide(obj) {
 						<input type="hidden" name="no" value="${commentData.no}" />
 						
 						<input type="hidden" name="boardNo" value="${boardVo.no}" />
-						<input type="hidden" name="pages" value="${pages}" />
-						<input type="hidden" name="kwd" value="${kwd_decode}" />
+						<input type="hidden" name="pages" value="${bpv.pages}" />
+						<input type="hidden" name="kwd" value="${bpv.kwd_decode}" />
 						
 						<td style="padding:0px;border-top:0px;border-bottom:0px;"></td>
 						<td colspan="2"><textarea name="contents" style="width:98%;height:45px;"></textarea></td>
@@ -97,6 +120,8 @@ function showhide(obj) {
 					</tr>
 					</c:if>
 				</table>
+				</c:if>
+				
 				</c:forEach>
 				
 				<c:if test="${authUser ne null}">
@@ -110,8 +135,8 @@ function showhide(obj) {
 					<input type="hidden" name="depth" value="-1" />
 					
 					<input type="hidden" name="boardNo" value="${boardVo.no}" />
-					<input type="hidden" name="pages" value="${pages}" />
-					<input type="hidden" name="kwd" value="${kwd_decode}" />
+					<input type="hidden" name="pages" value="${bpv.pages}" />
+					<input type="hidden" name="kwd" value="${bpv.kwd_decode}" />
 					<tr>
 						<td colspan="2"><textarea name="contents" style="width:98%;height:45px;"></textarea></td>
 						<td><input type="submit" value="댓글작성" /></td>
@@ -121,12 +146,12 @@ function showhide(obj) {
 				</c:if>
 				
 				<div class="bottom">
-					<a href="${pageContext.servletContext.contextPath}/board/list?pages=${pages}&kwd=${kwd_encode}">글목록</a>
+					<a href="${pageContext.servletContext.contextPath}/board/list?pages=${bpv.pages}&kwd=${bpv.kwd_encode}">글목록</a>
 					<c:if test="${authUser ne null}">
 						<c:if test="${authUser.no eq boardVo.userNo}">
-							<a href="${pageContext.servletContext.contextPath}/board/modify?no=${boardVo.no}&pages=${pages}&kwd=${kwd_encode}">글수정</a>
+							<a href="${pageContext.servletContext.contextPath}/board/modify?no=${boardVo.no}&pages=${bpv.pages}&kwd=${bpv.kwd_encode}">글수정</a>
 						</c:if>
-						<a href="${pageContext.servletContext.contextPath}/board/write?no=${boardVo.no}&groupNo=${boardVo.groupNo}&orderNo=${boardVo.orderNo}&depth=${boardVo.depth}&pages=${pages}&kwd=${kwd_encode}">답글</a>
+						<a href="${pageContext.servletContext.contextPath}/board/write?no=${boardVo.no}&groupNo=${boardVo.groupNo}&orderNo=${boardVo.orderNo}&depth=${boardVo.depth}&pages=${bpv.pages}&kwd=${bpv.kwd_encode}">답글</a>
 					</c:if>
 				</div>
 			</div>

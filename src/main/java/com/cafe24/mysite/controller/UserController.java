@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.cafe24.mysite.service.UserService;
 import com.cafe24.mysite.vo.UserVo;
+import com.cafe24.security.Auth;
+import com.cafe24.security.AuthUser;
 
 @Controller
 @RequestMapping("/user")
@@ -57,42 +59,13 @@ public class UserController {
 	public String login() {
 		return "user/login";
 	}
-	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public String login(
-			@RequestParam(value="email", required=true, defaultValue="") String email,
-			@RequestParam(value="password", required=true, defaultValue="") String password,
-			Model model,
-			HttpSession session
-			) {
-		
-		UserVo authUser = userService.getUser(new UserVo(email, password));
-		if(authUser == null) {
-			model.addAttribute("result", false);
-			return "user/login";
-		}
-		
-		session.setAttribute("authUser", authUser);
-		
-		return "redirect:/";
-	}
-	@RequestMapping("/logout")
-	public String logout(
-			HttpSession session
-			) {
-		session.setAttribute("authUser", null);
-		
-		return "redirect:/";
-	}
 	
-
+	@Auth
 	@RequestMapping(value="/update", method=RequestMethod.GET)
 	public String update(
 			Model model,
-			HttpSession session
+			@AuthUser UserVo authUser
 			) {
-		if(session == null) return "redirect:/";
-		UserVo authUser = (UserVo)session.getAttribute("authUser");
-		if(authUser == null) return "redirect:/";
 		
 		UserVo userVo = userService.getUser(authUser.getNo());
 		
@@ -100,15 +73,14 @@ public class UserController {
 		
 		return "user/update";
 	}
-
+	
+	@Auth
 	@RequestMapping(value="/update", method=RequestMethod.POST)
 	public String update(
 			UserVo userVo,
+			@AuthUser UserVo authUser,
 			HttpSession session
 			) {
-		if(session == null) return "redirect:/";
-		UserVo authUser = (UserVo)session.getAttribute("authUser");
-		if(authUser == null) return "redirect:/";
 		
 		userService.update(userVo, authUser);
 		

@@ -9,6 +9,8 @@ public class CommentVo {
 	private int depth;
 	private Long userNo;
 	private Long boardNo;
+	private Long parentNo;
+	private Integer status;
 	
 	private String userName;
 
@@ -82,6 +84,22 @@ public class CommentVo {
 
 	public void setBoardNo(Long boardNo) {
 		this.boardNo = boardNo;
+	}
+
+	public Long getParentNo() {
+		return parentNo;
+	}
+
+	public void setParentNo(Long parentNo) {
+		this.parentNo = parentNo;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	
 	
