@@ -7,13 +7,29 @@
 <title>mysite</title>
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <link href="${pageContext.servletContext.contextPath}/assets/css/board.css" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+function board_write_check(var1) {
+	var forms = document.getElementById(var1);
+
+	if(forms.title.value == "") {
+		alert("제목을 입력해 주세요.");
+		return;
+	}
+	if(forms.contents.value == "") {
+		alert("내용을 입력해 주세요.");
+		return;
+	}
+	
+	forms.submit();
+}
+</script>
 </head>
 <body>
 	<div id="container">
 		<c:import url="/WEB-INF/views/includes/header.jsp"></c:import>
 		<div id="content">
 			<div id="board">
-				<form class="board-form" method="post" action="${pageContext.servletContext.contextPath}/board/write" enctype="multipart/form-data">
+				<form class="board-form" method="post" action="${pageContext.servletContext.contextPath}/board/write" enctype="multipart/form-data" id="board_write">
 					<input type="hidden" name="groupNo" value="${bpv.groupNo}" />
 					<input type="hidden" name="orderNo" value="${bpv.orderNo}" />
 					<input type="hidden" name="depth" value="${bpv.depth}" />
@@ -42,7 +58,7 @@
 					<div class="bottom">
 						<c:if test="${bpv.no eq -1}"><a href="${pageContext.servletContext.contextPath}/board/list?pages=${bpv.pages}&kwd=${bpv.kwd_encode}">취소</a></c:if>
 						<c:if test="${bpv.no ne -1}"><a href="${pageContext.servletContext.contextPath}/board/view?no=${bpv.no}&pages=${bpv.pages}&kwd=${bpv.kwd_encode}">취소</a></c:if>
-						<input type="submit" value="등록">
+						<a href="#100" onclick="board_write_check('board_write');">등록</a>
 					</div>
 				</form>				
 			</div>

@@ -10,13 +10,13 @@
 	</insert>
 	<select id="getByEmailAndPassword" parameterType="uservo" resultType="uservo">
 	<![CDATA[
-		select no, name from user
+		select no, name, role from user
 		where email=#{email} and password=#{password}
 	]]>
 	</select>
 	<select id="getByNo" parameterType="java.util.Map" resultType="uservo">
 	<![CDATA[
-		select no, name, email, password, gender 
+		select no, name, email, password, gender, role
 		from user
 		where no=#{no}
 	]]>
@@ -33,7 +33,7 @@
 	
 	<select id="getByEmail" parameterType="string" resultType="uservo">
 	<![CDATA[
-		select no, name, email, password, gender 
+		select no, name, email, password, gender, role 
 		from user
 		where email=#{email}
 	]]>

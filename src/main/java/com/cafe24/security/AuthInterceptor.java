@@ -50,19 +50,27 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			return false;
 		}
 		
+		request.setAttribute("authUser", authUser);
+		
 		//7. Role 가져오기
-		//Auth.Role role = auth.role();
+		Auth.Role role = auth.role();
 		
 		//8. role이 Auth.Role.USER라면
 		//   인증된 모든 사용자는 접근
-		//if(role == Auth.Role.USER) {
-		//	return true;
-		//}
+		if(role == Auth.Role.USER) {
+			return true;
+		}
 		
 		//9. Admin Role 권한 체크
-		// authUser.getRole()equals(Auth.Role.ADMIN)
+		if(role == Auth.Role.ADMIN) {
+			if(authUser.getRole().equals(Auth.Role.ADMIN.toString())) {
+				return true;
+			}else {
+				response.sendRedirect(request.getContextPath()+"/");
+				return false;
+			}
+		}
 		
-		request.setAttribute("authUser", authUser);
 		
 		return true;
 	}

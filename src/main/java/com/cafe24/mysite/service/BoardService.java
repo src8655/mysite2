@@ -87,8 +87,23 @@ public class BoardService {
 		return boardDao.getByNo(no);
 	}
 	
-	public boolean modify(BoardVo boardVo) {
-		return boardDao.update(boardVo);
+	public boolean modify(BoardVo boardVo, UserVo authUser, MultipartFile files1) {
+		
+		BoardVo boardVoOld = boardDao.getByNo(boardVo.getNo());
+		if(boardVoOld == null) return false;
+		if(authUser.getNo() != boardVoOld.getUserNo()) return false;
+		
+		boardVoOld.setTitle(boardVo.getTitle());
+		boardVoOld.setContents(boardVo.getContents());
+		
+		if(boardVo.getCheckdel() == 1) {
+			boardVoOld.setFile1("");
+		}else {
+			String url = restore(files1);
+			if(!url.equals("")) boardVoOld.setFile1(url);
+		}
+		
+		return boardDao.update(boardVoOld);
 	}
 	
 	public boolean delOne(Long no, UserVo authUser) {
@@ -106,16 +121,33 @@ public class BoardService {
 		}else {
 			//자식이 없으면 본인것을 삭제
 			result = boardDao.delete(no);
-			//그리고 자식이 없고 상태가 -1인 것을 찾아 삭제
-			List<BoardVo> list = boardDao.finddel();
-			for(BoardVo vo : list) {
-				boardDao.delete(vo.getNo());
+			//나한테 부모가 있는지 확인
+			if(boardVo.getParentNo() != null) {
+				//부모가 있으면 위로 올라감
+				delrepeat(boardVo.getParentNo());
 			}
 		}
 		
 		
 		
 		return result;
+	}
+	public void delrepeat(Long no) {
+		BoardVo boardVo = boardDao.getByNo(no);
+		//상태가 삭제 상태면
+		if(boardVo.getStatus() == -1) {
+			//자식 개수 확인
+			int countChild = boardDao.countchild(no);
+			if(countChild == 0) {
+				//자식이 없으면 삭제
+				boardDao.delete(no);
+				//나한테 부모가 있는지 확인
+				if(boardVo.getParentNo() != null) {
+					//부모가 있으면 위로 올라감
+					delrepeat(boardVo.getParentNo());
+				}
+			}
+		}
 	}
 	
 	public String updateHit(Long no, String cookie) {

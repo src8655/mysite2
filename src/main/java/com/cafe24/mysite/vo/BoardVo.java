@@ -1,8 +1,12 @@
 package com.cafe24.mysite.vo;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class BoardVo {
 	private Long no;
+	@NotEmpty
 	private String title;
+	@NotEmpty
 	private String contents;
 	private Integer hit;
 	private String regDate;
@@ -15,8 +19,8 @@ public class BoardVo {
 	private Integer status;
 	
 	private Integer commentCount;
-	
 	private String userName;
+	private Integer checkdel = -1;
 
 	public Long getNo() {
 		return no;
@@ -128,6 +132,14 @@ public class BoardVo {
 
 	public void setParentNo(Long parentNo) {
 		this.parentNo = parentNo;
+	}
+
+	public Integer getCheckdel() {
+		return checkdel;
+	}
+
+	public void setCheckdel(Integer checkdel) {
+		this.checkdel = checkdel;
 	}
 
 	

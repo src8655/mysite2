@@ -9,10 +9,12 @@ import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -77,12 +79,16 @@ public class BoardController {
 	@RequestMapping(value="/write", method = RequestMethod.POST)
 	public String write(
 			@ModelAttribute("bpv") BoardparamVo bpv,
-			@ModelAttribute BoardVo boardVo,
+			@ModelAttribute @Valid BoardVo boardVo,
+			BindingResult result,
 			@AuthUser UserVo authUser,
 			@RequestParam(value="files1") MultipartFile files1
 			) throws UnsupportedEncodingException {
 		bpv.setKwd_decode(URLDecoder.decode(bpv.getKwd(), "utf-8"));
 		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
+		
+		//Valid 잘못된접근은 모두 날리기
+		if(result.hasErrors()) return "redirect:/";
 		
 		Long newNo = boardService.boardWrite(boardVo, authUser, files1);
 		
@@ -135,7 +141,7 @@ public class BoardController {
 		
 		
 		BoardVo boardVo = boardService.getOneModify(bpv.getNo());
-		if(authUser.getNo() != boardVo.getUserNo()) return "redirect:/board/list";
+		if(authUser.getNo() != boardVo.getUserNo()) return "redirect:/";
 		
 		model.addAttribute("boardVo", boardVo);
 		
@@ -146,17 +152,17 @@ public class BoardController {
 	@RequestMapping(value="/modify", method = RequestMethod.POST)
 	public String modify(
 			@ModelAttribute("bpv") BoardparamVo bpv,
-			@ModelAttribute BoardVo boardVo,
-			@AuthUser UserVo authUser
+			@ModelAttribute @Valid BoardVo boardVo,
+			BindingResult result,
+			@AuthUser UserVo authUser,
+			@RequestParam(value="files1") MultipartFile files1
 			) throws UnsupportedEncodingException {
 		bpv.setKwd_decode(URLDecoder.decode(bpv.getKwd(), "utf-8"));
 		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
 		
-		
-		BoardVo boardVoOld = boardService.getOne(boardVo.getNo());
-		if(authUser.getNo() != boardVoOld.getUserNo()) return "redirect:/board/list";
-		
-		boardService.modify(boardVo);
+		//Valid 잘못된접근은 모두 날리기
+		if(result.hasErrors()) return "redirect:/";
+		if(!boardService.modify(boardVo, authUser, files1)) return "redirect:/";
 		
 		
 		return "redirect:/board/view?no="+boardVo.getNo() + "&pages="+bpv.getPages()+"&kwd="+bpv.getKwd_encode();
@@ -171,9 +177,7 @@ public class BoardController {
 		bpv.setKwd_decode(URLDecoder.decode(bpv.getKwd(), "utf-8"));
 		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
 		
-		 
-		 
-		 if(!boardService.delOne(bpv.getNo(), authUser)) return "redirect:/board/list";
+		 if(!boardService.delOne(bpv.getNo(), authUser)) return "redirect:/";
 		
 		return "redirect:/board/list?pages="+bpv.getPages()+"&kwd="+bpv.getKwd_encode();
 	}

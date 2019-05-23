@@ -58,7 +58,4 @@ public class BoardDao {
 		int result = sqlSession.update("board.setdelmode", no);
 		return result == 1;
 	}
-	public List<BoardVo> finddel() {
-		return sqlSession.selectList("board.finddel");
-	}
 }

@@ -41,7 +41,4 @@ public class CommentDao {
 		int result = sqlSession.update("comment.setdelmode", no);
 		return result == 1;
 	}
-	public List<CommentVo> finddel() {
-		return sqlSession.selectList("comment.finddel");
-	}
 }

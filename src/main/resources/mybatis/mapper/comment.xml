@@ -78,10 +78,5 @@
 		status='-1'
 		where no=#{no}
 	</update>
-	<select id="finddel" resultType="commentvo">
-		select c.no as no
-		from (select a.no, (select count(*) from comment as b where parent_no=a.no and status = 1) as bb from comment as a where status=-1) as c 
-		where c.bb=0
-	</select>
 	
 </mapper>

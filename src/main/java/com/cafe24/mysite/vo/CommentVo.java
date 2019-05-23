@@ -1,7 +1,10 @@
 package com.cafe24.mysite.vo;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 public class CommentVo {
 	private Long no;
+	@NotEmpty
 	private String contents;
 	private String regDate;
 	private int groupNo;

@@ -9,6 +9,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,11 +32,14 @@ public class CommentController {
 	@RequestMapping(value="/write", method = RequestMethod.POST)
 	public String write(
 			@ModelAttribute("bpv") BoardparamVo bpv,
-			@ModelAttribute CommentVo commentVo,
+			@ModelAttribute @Valid CommentVo commentVo,
+			BindingResult result,
 			@AuthUser UserVo authUser
 			) throws UnsupportedEncodingException {
 		bpv.setKwd_decode(URLDecoder.decode(bpv.getKwd(), "utf-8"));
 		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
+		
+		if(result.hasErrors()) return "redirect:/";
 		
 		commentService.commentWrite(commentVo, authUser);
 		
@@ -53,7 +57,7 @@ public class CommentController {
 		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
 
 		if(!commentService.commentDelete(commentVo, authUser))
-			return "redirect:/board/list";
+			return "redirect:/";
 		
 		return "redirect:/board/view?no="+commentVo.getBoardNo()+"&pages="+bpv.getPages()+"&kwd="+bpv.getKwd_encode();
 	}

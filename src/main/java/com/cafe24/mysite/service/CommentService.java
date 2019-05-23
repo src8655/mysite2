@@ -62,13 +62,31 @@ public class CommentService {
 		}else {
 			//자식이 없으면 본인것을 삭제
 			result = commentDao.delete(commentVo.getNo());
-			//그리고 자식이 없고 상태가 -1인 것을 찾아 삭제
-			List<CommentVo> list = commentDao.finddel();
-			for(CommentVo vo : list) {
-				commentDao.delete(vo.getNo());
+			//나한테 부모가 있는지 확인
+			if(cvo.getParentNo() != null) {
+				//부모가 있으면 위로 올라감
+				delrepeat(cvo.getParentNo());
 			}
 		}
 		
 		return result;
+	}
+
+	public void delrepeat(Long no) {
+		CommentVo commentVo = commentDao.getByNo(no);
+		//상태가 삭제 상태면
+		if(commentVo.getStatus() == -1) {
+			//자식 개수 확인
+			int countChild = commentDao.countchild(no);
+			if(countChild == 0) {
+				//자식이 없으면 삭제
+				commentDao.delete(no);
+				//나한테 부모가 있는지 확인
+				if(commentVo.getParentNo() != null) {
+					//부모가 있으면 위로 올라감
+					delrepeat(commentVo.getParentNo());
+				}
+			}
+		}
 	}
 }

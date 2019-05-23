@@ -16,6 +16,18 @@ function showhide(obj) {
 		document.getElementById(obj).style.display = "none";
 }
 
+
+function board_comment_check(var1) {
+	var forms = document.getElementById(var1);
+
+	if(forms.contents.value == "") {
+		alert("내용을 입력해 주세요.");
+		return;
+	}
+	
+	forms.submit();
+}
+
 </script>
 </head>
 <body>
@@ -51,7 +63,7 @@ function showhide(obj) {
 					<tr>
 						<td class="label">첨부파일</td>
 						<td colspan="5">
-							<a href="${pageContext.servletContext.contextPath}/${boardVo.file1}" target="_BLANK">${boardVo.file1}</a>
+							<a href="${pageContext.servletContext.contextPath}${boardVo.file1}" target="_BLANK">${pageContext.servletContext.contextPath}${boardVo.file1}</a>
 						</td>
 					</tr>
 					</c:if>
@@ -110,7 +122,7 @@ function showhide(obj) {
 					</tr>
 					<c:if test="${authUser ne null}">
 					<tr style="display:none;" id="commentRe_${commentData.no}">
-						<form action="${pageContext.servletContext.contextPath}/board/comment/write" method="post">
+						<form action="${pageContext.servletContext.contextPath}/board/comment/write" method="post" id="comment_form_${commentData.no}">
 						<input type="hidden" name="groupNo" value="${commentData.groupNo}" />
 						<input type="hidden" name="orderNo" value="${commentData.orderNo}" />
 						<input type="hidden" name="depth" value="${commentData.depth}" />
@@ -122,7 +134,7 @@ function showhide(obj) {
 						
 						<td style="padding:0px;border-top:0px;border-bottom:0px;"></td>
 						<td colspan="2"><textarea name="contents" style="width:98%;height:45px;"></textarea></td>
-						<td><input type="submit" value="답글작성" /></td>
+						<td><input type="button" value="댓글작성" onclick="board_comment_check('comment_form_${commentData.no}');" style="padding:5px;background:#eeeeee;border:0px;font-size:12px;font-weight:bold;" /></td>
 						
 						</form>
 					</tr>
@@ -137,7 +149,7 @@ function showhide(obj) {
 				<col width="100" />
 				<col />
 				<col width="80" />
-					<form action="${pageContext.servletContext.contextPath}/board/comment/write" method="post">
+					<form action="${pageContext.servletContext.contextPath}/board/comment/write" method="post" id="comment_form">
 					<input type="hidden" name="groupNo" value="-1" />
 					<input type="hidden" name="orderNo" value="-1" />
 					<input type="hidden" name="depth" value="-1" />
@@ -147,7 +159,7 @@ function showhide(obj) {
 					<input type="hidden" name="kwd" value="${bpv.kwd_decode}" />
 					<tr>
 						<td colspan="2"><textarea name="contents" style="width:98%;height:45px;"></textarea></td>
-						<td><input type="submit" value="댓글작성" /></td>
+						<td><input type="button" value="댓글작성" onclick="board_comment_check('comment_form');" style="padding:5px;background:#eeeeee;border:0px;font-size:12px;font-weight:bold;" /></td>
 					</tr>
 					</form>
 				</table>

@@ -11,7 +11,12 @@
 			<c:if test="${authUser ne null}">
 				<li><a href="${pageContext.servletContext.contextPath}/user/update">회원정보수정</a><li>
 				<li><a href="${pageContext.servletContext.contextPath}/user/logout">로그아웃</a><li>
-				<li>${authUser.name}님 안녕하세요 ^^;</li>
+				<li>
+					<c:if test="${authUser.role eq 'ADMIN'}">
+					<a href="${pageContext.servletContext.contextPath}/admin/" style="font-weight:bold;color:blue;">[관리자페이지]</a>
+					</c:if>
+					<span style="font-weight:bold;">${authUser.name}</span>님 안녕하세요 ^^;
+				</li>
 			</c:if>
 			</ul>
 		</div>

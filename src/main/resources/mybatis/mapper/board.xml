@@ -78,7 +78,8 @@
 	<update id="update" parameterType="boardvo">
 		update board set
 		title=#{title},
-		contents=#{contents}
+		contents=#{contents},
+		file1=#{file1}
 		where no=#{no}
 	</update>
 	
@@ -104,10 +105,5 @@
 		status='-1'
 		where no=#{no}
 	</update>
-	<select id="finddel" resultType="boardvo">
-		select c.no as no
-		from (select a.no, (select count(*) from board as b where parent_no=a.no and status = 1) as bb from board as a where status=-1) as c 
-		where c.bb=0
-	</select>
 	
 </mapper>
