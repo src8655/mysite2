@@ -47,6 +47,14 @@ function showhide(obj) {
 							</div>
 						</td>
 					</tr>
+					<c:if test="${boardVo.file1 ne ''}">
+					<tr>
+						<td class="label">첨부파일</td>
+						<td colspan="5">
+							<a href="${pageContext.servletContext.contextPath}/${boardVo.file1}" target="_BLANK">${boardVo.file1}</a>
+						</td>
+					</tr>
+					</c:if>
 				</table>
 				
 

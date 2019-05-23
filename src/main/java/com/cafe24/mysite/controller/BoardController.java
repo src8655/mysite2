@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cafe24.mysite.service.BoardService;
 import com.cafe24.mysite.service.CommentService;
@@ -77,12 +78,13 @@ public class BoardController {
 	public String write(
 			@ModelAttribute("bpv") BoardparamVo bpv,
 			@ModelAttribute BoardVo boardVo,
-			@AuthUser UserVo authUser
+			@AuthUser UserVo authUser,
+			@RequestParam(value="files1") MultipartFile files1
 			) throws UnsupportedEncodingException {
 		bpv.setKwd_decode(URLDecoder.decode(bpv.getKwd(), "utf-8"));
 		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
 		
-		Long newNo = boardService.boardWrite(boardVo, authUser);
+		Long newNo = boardService.boardWrite(boardVo, authUser, files1);
 		
 		return "redirect:/board/view?no="+newNo+"&pages="+bpv.getPages()+"&kwd="+bpv.getKwd_encode();
 	}
@@ -109,6 +111,8 @@ public class BoardController {
 		
 		BoardVo boardVo = boardService.getOne(bpv.getNo());
 		model.addAttribute("boardVo", boardVo);
+		
+		if(boardVo.getStatus() != 1) return "redirect:/";
 		
 		
 		

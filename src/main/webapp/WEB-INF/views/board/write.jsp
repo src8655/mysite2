@@ -13,7 +13,7 @@
 		<c:import url="/WEB-INF/views/includes/header.jsp"></c:import>
 		<div id="content">
 			<div id="board">
-				<form class="board-form" method="post" action="${pageContext.servletContext.contextPath}/board/write">
+				<form class="board-form" method="post" action="${pageContext.servletContext.contextPath}/board/write" enctype="multipart/form-data">
 					<input type="hidden" name="groupNo" value="${bpv.groupNo}" />
 					<input type="hidden" name="orderNo" value="${bpv.orderNo}" />
 					<input type="hidden" name="depth" value="${bpv.depth}" />
@@ -33,6 +33,10 @@
 							<td>
 								<textarea id="content" name="contents"></textarea>
 							</td>
+						</tr>
+						<tr>
+							<td class="label">첨부파일</td>
+							<td><input type="file" name="files1"></td>
 						</tr>
 					</table>
 					<div class="bottom">
