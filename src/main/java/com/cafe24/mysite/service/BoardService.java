@@ -1,6 +1,5 @@
 package com.cafe24.mysite.service;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -194,13 +193,13 @@ public class BoardService {
 			
 			byte[] fileData = multipartFile.getBytes();
 			
-//			OutputStream os = new FileOutputStream(SAVE_PATH + "/" + saveFileName);
-//			os.write(fileData);
-//			os.close();
+			OutputStream os = new FileOutputStream(SAVE_PATH + "/" + saveFileName);
+			os.write(fileData);
+			os.close();
 			
 			
 
-			multipartFile.transferTo(new File(SAVE_PATH + "/" + saveFileName));
+			//multipartFile.transferTo(new File(SAVE_PATH + "/" + saveFileName));
 			
 			url = URL + "/" + saveFileName;
 			
