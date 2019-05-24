@@ -180,7 +180,7 @@
 				<artifactId>tomcat-maven-plugin</artifactId>
 				<configuration>
 					<url>http://127.0.0.1:8080/manager/text</url>
-					<path>/mysite1</path>
+					<path>/mysite2</path>
 					<username>admin</username>
 					<password>snrnsnrn11</password>
 				</configuration>
