@@ -96,7 +96,13 @@
         	<mvc:exclude-mapping path="/user/auth"/>
         	<mvc:exclude-mapping path="/user/logout"/>
         	<mvc:exclude-mapping path="/assets/**"/>
+        	<mvc:exclude-mapping path="/board/view"/>
     		<bean class="com.cafe24.security.AuthInterceptor" />
+        </mvc:interceptor>
+        
+        <mvc:interceptor>
+        	<mvc:mapping path="/board/view" />
+    		<bean class="com.cafe24.security.CookieIntercepter" />
         </mvc:interceptor>
         
     </mvc:interceptors>

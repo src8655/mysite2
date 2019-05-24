@@ -151,6 +151,8 @@ public class BoardService {
 	}
 	
 	public String updateHit(Long no, String cookie) {
+		//System.out.println(cookie);
+		
 		//쿠키처리
 		String[] split = cookie.split("//");
 		boolean isContainCookie = false;

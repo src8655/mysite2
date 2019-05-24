@@ -99,28 +99,15 @@ public class BoardController {
 	@RequestMapping("/view")
 	public String view(
 			@ModelAttribute("bpv") BoardparamVo bpv,
-			@CookieValue(value="mysite_board_hit", required = true, defaultValue = "-1") String cookie,
-			HttpServletResponse response,
 			Model model
 			) throws UnsupportedEncodingException {
 		bpv.setKwd_decode(URLDecoder.decode(bpv.getKwd(), "utf-8"));
 		bpv.setKwd_encode(URLEncoder.encode(bpv.getKwd_decode(), "utf-8"));
 		
-		
-		//이미 있으면 null을 반환
-		cookie = boardService.updateHit(bpv.getNo(), cookie);
-		if(cookie != null) {
-			Cookie co = new Cookie("mysite_board_hit", cookie);
-			co.setMaxAge(60*60*24);
-			response.addCookie(co);
-		}
-		
 		BoardVo boardVo = boardService.getOne(bpv.getNo());
 		model.addAttribute("boardVo", boardVo);
 		
 		if(boardVo.getStatus() != 1) return "redirect:/";
-		
-		
 		
 		//댓글
 		List<CommentVo> commentList = commentService.getList(bpv.getNo());
