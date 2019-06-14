@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="comment">
+	<insert id="insert" parameterType="commentvo">
+
+		insert into comment values(
+		null,
+		#{contents},
+		now(),
+		<if test="groupNo == -1">
+			(select ifnull(max(group_no), 0)+1 from comment a),
+		</if>
+		<if test="groupNo != -1">
+			#{groupNo},
+		</if>
+		#{orderNo},
+		#{depth},
+		#{userNo},
+		#{boardNo},
+		#{parentNo},
+		#{status})
+		
+	</insert>
+	
+	<update id="updateOrderNo" parameterType="commentvo">
+		update comment set order_no=order_no+1 where order_no >= #{orderNo} and group_no=#{groupNo}
+	</update>
+	
+	<select id="getList" parameterType="long" resultType="commentvo">
+		select
+		a.no,
+		a.contents,
+		DATE_FORMAT(a.reg_date,'%Y-%m-%d') as regDate,
+		a.group_no as groupNo,
+		a.order_no as orderNo,
+		a.depth,
+		a.user_no as userNo,
+		a.board_no as boardNo,
+		b.name as userName,
+		a.parent_no as parentNo,
+		a.status
+		
+		from comment a, user b
+		where a.user_no=b.no
+		and board_no=#{boardNo}
+		order by group_no asc, order_no asc
+	</select>
+	
+	<delete id="delete" parameterType="long">
+		delete from comment where no=#{no}
+	</delete>
+	
+	<select id="getByNo" parameterType="long" resultType="commentvo">
+		select
+		no,
+		contents,
+		DATE_FORMAT(reg_date,'%Y-%m-%d') as regDate,
+		group_no as groupNo,
+		order_no as orderNo,
+		depth,
+		user_no as userNo,
+		board_no as boardNo,
+		parent_no as parentNo,
+		status
+		
+		from comment
+		where no=#{no}
+	</select>
+	
+	<select id="countchild" parameterType="long" resultType="int">
+		select count(*)
+		from comment
+		where parent_no=#{no}
+	</select>
+	<update id="setdelmode" parameterType="long">
+		update comment set
+		status='-1'
+		where no=#{no}
+	</update>
+	
+</mapper>

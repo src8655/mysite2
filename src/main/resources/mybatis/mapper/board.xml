@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="board">
+
+	<insert id="insert" parameterType="boardvo" useGeneratedKeys="true" keyProperty="no">
+
+		insert into board values(
+		null,
+		#{title},
+		#{contents},
+		#{hit},
+		now(),
+		<if test="groupNo == -1">
+			(select ifnull(max(group_no), 0)+1 from board a),
+		</if>
+		<if test="groupNo != -1">
+			#{groupNo},
+		</if>
+		#{orderNo},
+		#{depth},
+		#{userNo},
+		#{parentNo},
+		#{file1},
+		#{status})
+		
+	</insert>
+	
+	<update id="updateOrderNo" parameterType="boardvo">
+		update board set order_no=order_no+1 where order_no >= #{orderNo} and group_no=#{groupNo}
+	</update>
+	
+	<select id="getList" parameterType="java.util.Map" resultType="boardvo">
+		select
+		a.no,
+		title,
+		contents,
+		hit,
+		DATE_FORMAT(reg_date,'%Y-%m-%d %H:%m:%s') as regDate,
+		group_no as groupNo,
+		order_no as orderNo,
+		depth,
+		user_no as userNo,
+		b.name as userName,
+		(select count(*) from comment c where board_no=a.no and c.status=1) as commentCount,
+		parent_no as parentNo,
+		file1,
+		status
+		
+		from board a, user b
+		where a.user_no=b.no
+		and title like CONCAT('%', #{kwd}, '%')
+		order by group_no desc, order_no asc
+		limit #{startNum}, #{boardCnt}
+	</select>
+	
+	<select id="getByNo" parameterType="long" resultType="boardvo">
+		select
+		a.no,
+		title,
+		contents,
+		hit,
+		DATE_FORMAT(reg_date,'%Y-%m-%d %H:%m:%s') as regDate,
+		group_no as groupNo,
+		order_no as orderNo,
+		depth,
+		user_no as userNo,
+		b.name as userName,
+		parent_no as parentNo,
+		file1,
+		status
+		
+		from board a, user b
+		where a.user_no=b.no
+		and a.no=#{no}
+	</select>
+	
+	<update id="update" parameterType="boardvo">
+		update board set
+		title=#{title},
+		contents=#{contents},
+		file1=#{file1}
+		where no=#{no}
+	</update>
+	
+	<delete id="delete" parameterType="long">
+		delete from board where no=#{no}
+	</delete>
+	
+	<select id="count" parameterType="string" resultType="Integer">
+		select count(*) from board where title like CONCAT('%', #{kwd}, '%')
+	</select>
+	
+	<update id="updateHit" parameterType="long">
+		update board set hit=hit+1 where no=#{no}
+	</update>
+	
+	<select id="countchild" parameterType="long" resultType="int">
+		select count(*)
+		from board
+		where parent_no=#{no}
+	</select>
+	<update id="setdelmode" parameterType="long">
+		update board set
+		status='-1'
+		where no=#{no}
+	</update>
+	
+</mapper>
